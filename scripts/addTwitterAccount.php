@@ -1,9 +1,9 @@
 <?php
 session_start();
 
-require_once 'lib/twitteroauth.php';
-define('CONSUMER_KEY', 'uXGyKSHCWbGmtSZ3FTbgug');
-define('CONSUMER_SECRET', 'ANouvyK5ZDeoNFJudeVjFSuzPQ3kEAEhLVMUrvilpA');
+require_once '../lib/twitteroauth.php';
+require_once '../twitter.conf.php';
+
 
 if (!isset($_GET['c'])){
     $connection  = new TwitterOAuth(CONSUMER_KEY,CONSUMER_SECRET);

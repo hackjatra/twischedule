@@ -1,7 +1,7 @@
 <?php
 ob_start();
-require_once 'lib/twitteroauth.php';
-require_once 'lib/twitter.conf.php';
+require_once '../lib/twitteroauth.php';
+require_once '../twitter.conf.php';
 
 $GROUP_ALIAS = array("","g","group","samuha","schedule");
 $ALPHABET_NE_ROMANISED = array("ka","kha","ga","gha","na","cha","chha");
