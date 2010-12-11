@@ -30,15 +30,11 @@ function getSchedule($group){
     
     $str = '';
     
-    
     while($data = mysql_fetch_object($query)){
         $str .= "Start Time: ".$data->start_time." Duration:".$data->duration." ";
     }
     
-    
-    echo $str;
-    die();
-    
+    return $str;
 }
 
 
@@ -67,12 +63,27 @@ function getGroup($tags){
     return array_unique($ret);
 }
 
+function save_id_str($id){
+    $sql=sprintf('INSERT INTO `loadshedding_revealed`.`hj_replied` (`status_id`) VALUES ("%s");',$id);
+    $res = mysql_query($sql);
+    // TODO: Check for error.
+}
+
+function is_replied($id){
+    $sql=sprintf('SELECT * FROM `hj_replied` WHERE `status_id` LIKE "%s"',$id);
+
+    if(mysql_fetch_object($query))      // Such id exist in database
+        return true;
+    return false;
+}
+
 /* Post Status */
 function postStatus($text,$in_reply_to=NULL){
     global $account;
     if($in_reply_to!=NULL){
         $text= "@".$in_reply_to->user->screen_name.", ".$text;
         $response=$account->post('statuses/update', array('status' => $text, "in_reply_to_status_id" => $in_reply_to->id_str));
+        save_id_str($in_reply_to->id_str);
     }
     else $response=$account->post('statuses/update', array('status' => $text));
     echo "[*] ".$message;
@@ -91,6 +102,7 @@ function replySchedule($tweet,$groups){
 /* get the mentions and process the request */
 $response=$account->get('statuses/mentions');
 foreach ($response as $key => $tweet){
+    if(is_replied($in_reply_to->id_str));
     preg_match_all("/#([^ ]*)/i",$tweet->text,$matches);
     $matches=$matches[1];
     $groups=getGroup($matches);
