@@ -9,6 +9,14 @@ $ALPHABET_NE_ROMANISED = array("ka","kha","ga","gha","na","cha","chha");
 $account = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $auth["tweetnea"]["oauth_token"], $auth["tweetnea"]["oauth_token_secret"]);
 
 /**
+ * Retun schedule(string) for the group.
+ */
+function getSchedule($group){
+    return "Under Construction";
+}
+
+
+/**
  * Extract the group/samuha from the tags
  */
 function getGroup($tags){
@@ -33,22 +41,24 @@ function getGroup($tags){
     return array_unique($ret);
 }
 
-/* Post a message */
-function postText($text,$in_reply_to=NULL){
+/* Post Status */
+function postStatus($text,$in_reply_to=NULL){
     global $account;
-    if($in_reply_to!=NULL) 
-     $response=$account->post('statuses/update', array('status' => "@".$in_reply_to->user->screen_name.", ".$text, "in_reply_to_status_id" => $in_reply_to->id_str));
+    if($in_reply_to!=NULL){
+        $text= "@".$in_reply_to->user->screen_name.", ".$text;
+        $response=$account->post('statuses/update', array('status' => $text, "in_reply_to_status_id" => $in_reply_to->id_str));
+    }
     else $response=$account->post('statuses/update', array('status' => $text));
+    echo "[*] ".$message;
 }
 
 /** 
- * Reply to the user
+ * Reply the schedule of the groups(array) to the user(tweet)
  */
 function replySchedule($tweet,$groups){
     foreach ($groups as $group){
-        //TODO
-        echo "Reply ". $tweet->user->screen_name ." => ".$group;
-        postText("Under Construction", $tweet);
+        $message=getSchedule($group);
+        postStatus("Under Construction", $tweet);
     }
 }
 
