@@ -1,5 +1,5 @@
 This is a twitter-app that notifes about the powercut to its followers 
 	Follow @tweetnea
 	
-Note: twitter.conf.php has not been included in commit. Its secret :p
+Note: twitter.conf.php has been relacted to remove the secret key. Yea that's secret :p
 	
