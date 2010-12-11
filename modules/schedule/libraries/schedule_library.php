@@ -41,8 +41,8 @@ class Schedule_Library{
         return $this->CI->group_model->edit_group($data,$where);
     }
     
-    function get_groups(){
-        return $this->CI->group_model->get_groups();    
+    function get_schedules(){
+        return $this->CI->schedule_model->get_schedules();    
     }
     
     function get_group($where){

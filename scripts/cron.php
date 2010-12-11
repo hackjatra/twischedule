@@ -1,7 +1,11 @@
 <?php
 ob_start();
-require_once '../lib/twitteroauth.php';
-require_once '../twitter.conf.php';
+//require_once '../lib/twitteroauth.php';
+//require_once '../twitter.conf.php';
+require_once 'my_connection.php';
+
+getSchedule('1');
+
 
 $GROUP_ALIAS = array("","g","group","samuha","schedule");
 $ALPHABET_NE_ROMANISED = array("ka","kha","ga","gha","na","cha","chha");
@@ -12,7 +16,29 @@ $account = new TwitterOAuth(CONSUMER_KEY, CONSUMER_SECRET, $auth["tweetnea"]["oa
  * Retun schedule(string) for the group.
  */
 function getSchedule($group){
-    return "Under Construction";
+    
+    $sql = "SELECT group_id from hj_group where group_machine_name = '{$group}'";
+    $query = mysql_query($sql);
+    if($data = mysql_fetch_object($query)){
+        $group_id = $data->group_id;
+    }
+    
+    $day = strtolower(date('l'));
+    $sql = "SELECT * from hj_schedule where group_id = '{$group_id}' and day = '{$day}'";
+    
+    $query = mysql_query($sql);
+    
+    $str = '';
+    
+    
+    while($data = mysql_fetch_object($query)){
+        $str .= "Start Time: ".$data->start_time." Duration:".$data->duration." ";
+    }
+    
+    
+    echo $str;
+    die();
+    
 }
 
 
