@@ -1,11 +1,9 @@
 <?php
+$DEBUG=false;
 ob_start();
-//require_once '../lib/twitteroauth.php';
-//require_once '../twitter.conf.php';
+require_once '../lib/twitteroauth.php';
+require_once '../twitter.conf.php';
 require_once 'my_connection.php';
-
-getSchedule('1');
-
 
 $GROUP_ALIAS = array("","g","group","samuha","schedule");
 $ALPHABET_NE_ROMANISED = array("ka","kha","ga","gha","na","cha","chha");
@@ -52,7 +50,6 @@ function getGroup($tags){
             /* Check if the string is romanized nepali (samuha) */
             if($key=array_search($matches[0],$ALPHABET_NE_ROMANISED))
                 $ret[]=((int)$key);
-            //else echo "<hr>"; print_r($matches);  echo "<hr/>";
         }
         /* If there is number attached */
         else{
@@ -71,8 +68,8 @@ function save_id_str($id){
 
 function is_replied($id){
     $sql=sprintf('SELECT * FROM `hj_replied` WHERE `status_id` LIKE "%s"',$id);
-
-    if(mysql_fetch_object($query))      // Such id exist in database
+    $res = mysql_query($sql);
+    if($a=@mysql_fetch_object($res))      // Such id exist in database
         return true;
     return false;
 }
@@ -83,10 +80,9 @@ function postStatus($text,$in_reply_to=NULL){
     if($in_reply_to!=NULL){
         $text= "@".$in_reply_to->user->screen_name.", ".$text;
         $response=$account->post('statuses/update', array('status' => $text, "in_reply_to_status_id" => $in_reply_to->id_str));
-        save_id_str($in_reply_to->id_str);
     }
     else $response=$account->post('statuses/update', array('status' => $text));
-    echo "[*] ".$message;
+    echo "[*] ".$text;
 }
 
 /** 
@@ -102,15 +98,18 @@ function replySchedule($tweet,$groups){
 /* get the mentions and process the request */
 $response=$account->get('statuses/mentions');
 foreach ($response as $key => $tweet){
-    if(is_replied($in_reply_to->id_str));
+    if(is_replied($tweet->id_str)) continue;
     preg_match_all("/#([^ ]*)/i",$tweet->text,$matches);
     $matches=$matches[1];
     $groups=getGroup($matches);
     if(!empty($groups)) 
         replySchedule($tweet,$groups);
+    save_id_str($tweet->id_str);		// Mark this tweet as replied
 }
 
 $ob_output = ob_get_clean();
+
+if(!$DEBUG) exit;
 
 ?>
 <!DOCTYPE html>
