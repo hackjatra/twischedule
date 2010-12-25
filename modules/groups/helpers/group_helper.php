@@ -18,3 +18,12 @@ if(!function_exists('get_groups')){
         return $results;
     }
 }
+
+if(!function_exists('find_groups')){
+    function find_groups($where = array()){
+        $CI = & get_instance();
+        $CI->load->module_library('groups','group_library');
+        $results = $CI->group_library->find_groups($where);
+        return $results;
+    }
+}

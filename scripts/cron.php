@@ -1,4 +1,7 @@
 <?php
+
+date_default_timezone_set('Asia/Katmandu');
+
 $DEBUG=false;
 ob_start();
 require_once '../lib/twitteroauth.php';

@@ -7,6 +7,7 @@ class Schedule extends Admin_Controller{
         parent::Admin_Controller();
         $this->load->library('schedule_library');
         $this->load->module_helper('groups','group_helper');
+        $this->load->module_helper('schedule','schedule_helper');
     }
     
     function index(){

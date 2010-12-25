@@ -17,48 +17,36 @@ class Schedule_Library{
         $days = array('sunday','monday','tuesday','wednesday','thursday','friday','saturday');
         $index = 0;
         
+        $day_number = 0; /* 0 for sunday, 1 for monday and so on */
         foreach($days as $day):
             $index = 0;
             $data = array();
             foreach($object[$day] as $item):
+                $hr = explode(':',$item,2);
+                $hr = $hr[0];
                 $data['group_id'] = $group_id;
                 $data['day'] = $day;
                 $data['start_time'] = $item;
                 $data['duration'] = $object[$day][$index++];
                 $data['order'] = $index;
-                
+                $data['slot'] = $day_number*24 + $hr;
                 $this->CI->schedule_model->add_schedule($data);
             endforeach;
+            $day_number++;
         endforeach;
         
         flashMsg('success','Schedule added successfully');
         return;
     }
     
-    function edit_group($object,$where){
-        $data['group_name'] = $object['group_name'];
-        $data['group_machine_name'] = str_replace (" ", "", $object['group_machine_name']);
-        return $this->CI->group_model->edit_group($data,$where);
-    }
-    
     function get_schedules(){
         return $this->CI->schedule_model->get_schedules();    
     }
     
-    function get_group($where){
-        return $this->CI->group_model->get_group($where);    
+    function find_schedules($where){
+        return $this->CI->schedule_model->find_schedules($where);    
     }
     
-    function delete_group($where){
-        $status = $this->CI->group_model->delete_group($where);
-        
-        if($status){
-            flashMsg('success',"Group Deleted Successfully");    
-        }else{
-            flashMsg('warning',"Sorry Group Can't be deleted");    
-        }
-        return;
-        
-    }
+    
 }
 ?>

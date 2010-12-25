@@ -1,0 +1,1 @@
+ALTER TABLE `hj_schedule` CHANGE `extra` `slot` INT( 255 ) NOT NULL ;

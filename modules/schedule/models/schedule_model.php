@@ -23,10 +23,23 @@ class Schedule_Model extends Base_model{
     
     function get_schedule($where){
         $this->db->where($where);
+        $this->db->order_by('order','asc');
         $query = $this->fetch('Schedule');
         
         if($query){
             return $query->first_row();
+        }else{
+            return false;
+        }
+    }
+    
+    function find_schedules($where){
+        $this->db->where($where);
+        $this->db->order_by('order','asc');
+        $query = $this->fetch('Schedule');
+        
+        if($query){
+            return $query->result();
         }else{
             return false;
         }
